@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { DataTable } from 'primereact/datatable';
-import type { DataTablePageEvent } from 'primereact/datatable';
+import type { DataTablePageEvent, DataTableSelectionMultipleChangeEvent } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import 'primereact/resources/themes/lara-light-indigo/theme.css';
 import 'primereact/resources/primereact.min.css';
@@ -35,6 +35,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [totalRecords, setTotalRecords] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedArtworks, setSelectedArtworks] = useState<Artwork[]>([]);
 
   const fetchArtworks = async (page: number) => {
     setLoading(true);
@@ -66,6 +67,12 @@ function App() {
     <div className="app-container">
       <h1>Art Institute of Chicago - Artworks</h1>
       
+      {selectedArtworks.length > 0 && (
+        <div className="selection-info">
+          <strong>{selectedArtworks.length}</strong> artwork{selectedArtworks.length !== 1 ? 's' : ''} selected
+        </div>
+      )}
+      
       <div className="datatable-wrapper">
         <DataTable 
           value={artworks} 
@@ -76,11 +83,16 @@ function App() {
           rows={12}
           totalRecords={totalRecords}
           onPage={onPageChange}
+          selection={selectedArtworks}
+          onSelectionChange={(e: DataTableSelectionMultipleChangeEvent<Artwork[]>) => setSelectedArtworks(e.value)}
+          selectionMode="multiple"
+          dataKey="id"
           tableStyle={{ minWidth: '60rem' }}
           stripedRows
           paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport"
           currentPageReportTemplate="Showing {first} to {last} of {totalRecords} artworks"
         >
+          <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
           <Column field="title" header="Title" style={{ width: '20%' }}></Column>
           <Column field="artist_display" header="Artist" style={{ width: '20%' }}></Column>
           <Column field="place_of_origin" header="Place of Origin" style={{ width: '15%' }}></Column>

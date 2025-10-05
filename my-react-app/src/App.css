@@ -10,6 +10,15 @@
   font-size: 2rem;
 }
 
+.selection-info {
+  background-color: #3b82f6;
+  color: white;
+  padding: 0.75rem 1.25rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  display: inline-block;
+}
+
 .datatable-wrapper {
   background: white;
   border-radius: 8px;
